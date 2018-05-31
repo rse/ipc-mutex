@@ -49,7 +49,7 @@ Usage
     const Mutex = require("ipc-mutex")
 
     /*  open connection  */
-    let mutex = new Mutex("spm")
+    let mutex = new Mutex("spm:foo")
     await mutex.open()
 
     /*  acquire exclusive lock  */
@@ -65,9 +65,9 @@ Usage
 
 The following URLs are supported on `new Mutex(url)`:
 
-- `spm`
-- `mpm:<unique-id>`
-- `rpm+redis://[xxx:<secret>@]<host>[:<port>][/<scope>]`
+- `spm:<id>`
+- `mpm:<id>`
+- `rpm+redis://[xxx:<secret>@]<host>[:<port>][/<id>]`
 
 Application Programming Interface (API)
 ---------------------------------------

@@ -1,5 +1,8 @@
 
 const suite = require("./suite")
 
-suite("spm")
+;(async () => {
+    for (let i = 0; i < 10; i++)
+        suite("spm:foo", i)
+})()
 

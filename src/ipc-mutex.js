@@ -33,7 +33,7 @@ class Mutex {
     constructor (url) {
         let m
         let urlParsed = URL.parse(url, true)
-        if (url === "spm")
+        if (urlParsed.protocol === "spm:")
             this.strategy = new MutexSPM(urlParsed)
         else if (urlParsed.protocol === "mpm:")
             this.strategy = new MutexMPM(urlParsed)

@@ -34,9 +34,7 @@ class InternalMutex {
         this.unlock = null
     }
     acquire (cb) {
-        if (this.unlock !== null)
-            throw new Error("already acquired")
-        this.lock(`IPC-Mutex-mpm:${this.id}:lock`, (unlock) => {
+        this.lock(`IPC-Mutex-mpm:${this.id}`, (unlock) => {
             this.unlock = unlock
             cb(null)
         })
@@ -55,7 +53,7 @@ class InternalMutex {
     }
     destroy (cb) {
         if (this.unlock !== null)
-            this.release().then(cb)
+            this.release().then(() => cb(null), (err) => cb(err))
         else
             cb(null)
     }
@@ -64,12 +62,13 @@ class InternalMutex {
 /*  Mutex for Multi-Process-Model (MPM)  */
 export default class Mutex {
     constructor (url) {
+        if (url.hostname === "")
+            throw new Error("no mutex id given")
         this.url    = url
-        this.opened = false
-        this.lock   = Lock()
-        this.locked = false
-        this.unlock = null
         this.id     = this.url.hostname
+        this.opened = false
+        this.mutex  = null
+        this.crpc   = null
     }
 
     /*  open connection  */
@@ -118,9 +117,10 @@ export default class Mutex {
     async close () {
         if (!this.opened)
             throw new Error("still not opened")
-        await this.mutex.destroy()
-        delete this.mutex
-        delete this.crpc
+        if (cluster.isMaster)
+            await this.mutex.destroy()
+        this.mutex  = null
+        this.crpc   = null
         this.opened = false
     }
 }
