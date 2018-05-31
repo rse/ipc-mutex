@@ -28,6 +28,8 @@ import redisLock from "redis-lock"
 /*  Mutex for Remote-Process-Model (RPM) with Redis standalone database  */
 export default class Mutex {
     constructor (url) {
+        if (!url.pathname)
+            throw new Error("missing pathname in URL")
         this.url    = url
         this.opened = false
         this.lock   = null
@@ -45,12 +47,8 @@ export default class Mutex {
             options.port = this.url.port ? parseInt(this.url.port) : 6379
             if (this.url.auth)
                 options.password = this.url.auth.split(":")[1]
-            if (this.url.pathname) {
+            if (this.url.pathname)
                 options.prefix = this.url.pathname.replace(/^\/([^/]+).*/, "$1/")
-                this.prefix = options.prefix
-            }
-            else
-                this.prefix = ""
             this.client = redis.createClient(options)
             this.lock = redisLock(this.client)
             let handled = false

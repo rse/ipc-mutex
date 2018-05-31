@@ -24,6 +24,9 @@
         "redis-lock":                                "0.1.4",
         "lock":                                      "1.1.0",
         "consul":                                    "0.31.0",
+        "etcd3":                                     "0.2.11",
+        "pg":                                        "7.4.3",
+        "pure-uuid":                                 "1.5.2",
         "babel-runtime":                             "6.26.0"
     },
     "devDependencies": {
