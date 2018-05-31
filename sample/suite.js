@@ -14,7 +14,7 @@ module.exports = async function (url, id = 0) {
         await mutex.acquire()
         console.log(`++ ACQUIRED ${id} (#${i})`)
         await new Promise((resolve, reject) => {
-            let delay = Math.trunc(Math.random() * 1 * 10)
+            let delay = Math.trunc(Math.random() * 1 * 100)
             console.log(`++ WORK ${id} (#${i}): ${delay}ms`)
             setTimeout(() => {
                 resolve()
