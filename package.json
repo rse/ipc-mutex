@@ -1,6 +1,6 @@
 {
     "name":        "ipc-mutex",
-    "version":     "0.9.3",
+    "version":     "0.9.4",
     "description": "Inter-Process-Communication Mutual-Exclusion-Lock",
     "keywords":    [ "ipc", "mutex", "lock" ],
     "main":        "lib/ipc-mutex.js",
