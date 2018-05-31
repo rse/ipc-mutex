@@ -14,8 +14,8 @@ About
 -----
 
 This [Node.js](https://nodejs.org) module provides an abstraction layer
-for Inter-Process-Communication through Mutual Exclusion Lock (Mutex). It
-supports the following modes:
+for Inter-Process-Communication (IPC) through a Mutual Exclusion Lock (Mutex).
+It supports the following modes:
 
 - Single-Process-Model (SPM):<br/>
   This is for Node applications NOT using the `cluster` module. The
