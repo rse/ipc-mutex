@@ -33,7 +33,7 @@ supports the following modes:
   This is for Node applications split into distinct processes (not
   created through the `cluster` module), usually running also on
   distinct machines. The coordination is performed with the help of an
-  external database. Currently Redis is supported.
+  external lock manager. Currently Redis is supported.
 
 Installation
 ------------
