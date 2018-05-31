@@ -18,21 +18,22 @@ for Inter-Process-Communication through Mutual Exclusion Lock (Mutex). It
 supports the following modes:
 
 - Single-Process-Model (SPM):<br/>
-  This is for Node applications NOT using the `cluster` module.
-  The storage is performed with an in-memory hash.
-  No external resource is needed.
+  This is for Node applications NOT using the `cluster` module. The
+  coordination is performed with an in-memory data structure. No
+  external resource is needed.
 
 - Multi-Process-Model (MPM):<br/>
-  This is for Node applications using the `cluster` module.
-  The storage is performed with an in-memory hash
-  in each process and an IPC message exchange between the processes
-  with the help of the `cluster` module. No external resource is needed.
+  This is for Node applications using the `cluster` module. The
+  coordination is performed with an in-memory data structure in the
+  master process and an IPC message exchange between the worker
+  processes and the master process with the help of the `cluster`
+  module. No external resource is needed.
 
 - Remote-Process-Model (RPM):<br/>
-  This is for Node applications split into distinct process, usually
-  running also on distinct machines.
-  The storage is performed with the help of an external database.
-  Currently Redis is supported.
+  This is for Node applications split into distinct processes (not
+  created through the `cluster` module), usually running also on
+  distinct machines. The coordination is performed with the help of an
+  external database. Currently Redis is supported.
 
 Installation
 ------------
