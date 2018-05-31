@@ -25,7 +25,7 @@
 import redis     from "redis"
 import redisLock from "redis-lock"
 
-/*  Mutex for Remote-Process-Model (RPM) with REDIS standalone database  */
+/*  Mutex for Remote-Process-Model (RPM) with Redis standalone database  */
 export default class Mutex {
     constructor (url) {
         this.url    = url
@@ -107,7 +107,6 @@ export default class Mutex {
         this.client.quit()
         delete this.client
         this.opened = false
-        return Promise.resolve()
     }
 }
 
