@@ -27,6 +27,7 @@ import URL             from "url"
 import MutexSPM        from "./ipc-mutex-1-spm"
 import MutexMPM        from "./ipc-mutex-2-mpm"
 import MutexRPMredis   from "./ipc-mutex-3-rpm-redis"
+import MutexRPMconsul  from "./ipc-mutex-4-rpm-consul"
 
 /*  Mutex API  */
 class Mutex {
@@ -39,6 +40,7 @@ class Mutex {
             this.strategy = new MutexMPM(urlParsed)
         else if (typeof urlParsed.protocol === "string" && (m = urlParsed.protocol.match(/^rpm(?:\+([a-z]+))?:$/)) !== null) {
             if      (m[1] === "redis")  this.strategy = new MutexRPMredis(urlParsed)
+            else if (m[1] === "consul") this.strategy = new MutexRPMconsul(urlParsed)
             else
                 throw new Error(`unknown implementation strategy "${url}"`)
         }
