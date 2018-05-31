@@ -55,7 +55,6 @@
     },
     "scripts": {
         "prepublishOnly":  "grunt default",
-        "build":           "grunt default",
-        "test":            "grunt default && node sample/rpm.js"
+        "build":           "grunt default"
     }
 }
