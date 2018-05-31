@@ -33,7 +33,7 @@ supports the following modes:
   This is for Node applications split into distinct processes (not
   created through the `cluster` module), usually running also on
   distinct machines. The coordination is performed with the help of an
-  external lock manager. Currently Redis is supported.
+  external lock manager. Currently Redis and Consul are supported.
 
 Installation
 ------------
@@ -69,6 +69,7 @@ The following URLs are supported on `new Mutex(url)`:
 - `spm:<id>`
 - `mpm:<id>`
 - `rpm+redis://[xxx:<secret>@]<host>[:<port>][/<id>]`
+- `rpm+consul://[xxx:<token>@]<host>[:<port>][/<id>]`
 
 Application Programming Interface (API)
 ---------------------------------------
