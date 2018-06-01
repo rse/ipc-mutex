@@ -70,7 +70,7 @@ The following URLs are supported on `new Mutex(url)`:
 - `mpm:<id>`
 - `rpm+redis://[xxx:<secret>@]<host>[:<port>]/<id>`
 - `rpm+pgsql://[<username>:<password>@]<host>[:<port>][/<database>]/<id>[?tls=true[&&key=<file>&&crt=<file>&&ca=<file>]]`
-- `rpm+consul://[xxx:<token>@]<host>[:<port>]/<id>`
+- `rpm+consul://[xxx:<token>@]<host>[:<port>]/<id>[?tls=true[&&key=<file>&&crt=<file>&&ca=<file>]]`
 
 Application Programming Interface (API)
 ---------------------------------------

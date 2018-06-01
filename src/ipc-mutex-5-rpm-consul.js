@@ -54,6 +54,20 @@ export default class Mutex {
         }
         if (this.url.auth)
             options.defaults.token = this.url.auth.split(":")[1]
+        if (   this.url.query.tls !== undefined
+            || this.url.query.ca  !== undefined
+            || this.url.query.key !== undefined
+            || this.url.query.crt !== undefined) {
+            options.rejectUnauthorized = false
+            if (this.url.query.ca !== undefined) {
+                options.ca = fs.readFileSync(this.url.query.ca).toString()
+                options.rejectUnauthorized = true
+            }
+            if (this.url.query.key !== undefined)
+                options.key = fs.readFileSync(this.url.query.key).toString()
+            if (this.url.query.crt !== undefined)
+                options.cert = fs.readFileSync(this.url.query.crt).toString()
+        }
         this.consul = consul(options)
         let result = await this.consul.session.create({
             name:      `IPC-Mutex-RPM/${this.id}/session`,
