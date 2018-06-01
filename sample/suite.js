@@ -4,35 +4,44 @@
 const expect = require("chai").expect
 const Mutex = require("..")
 
-module.exports = (url, id = 0) => {
-    let delay = Math.trunc(Math.random() * 1 * 10)
-    setTimeout(async () => {
-        /*  open connection  */
-        console.log(`++ START ${id}: ${url}`)
-        let mutex = new Mutex(url)
-        await mutex.open()
-
-        for (let i = 0; i < 10; i++) {
-            await mutex.acquire()
-            // console.log(`++ ACQUIRED ${id} (#${i})`)
-            await new Promise((resolve, reject) => {
-                let delay = Math.trunc(Math.random() * 1 * 10)
-                console.log(`++ WORK ${id} (#${i}): ${delay}ms`)
-                setTimeout(() => {
+module.exports = class Suite {
+    constructor (url, pid = process.pid) {
+        this.url = url
+        this.pid = pid
+    }
+    async open () {
+        console.log(`++ OPEN pid=${this.pid} url=${this.url}`)
+        this.mutex = new Mutex(this.url)
+        await this.mutex.open()
+    }
+    async work (workers = 10, tasks = 10) {
+        let promises = []
+        for (let i = 0; i < workers; i++) {
+            promises.push(new Promise((resolve, reject) => {
+                let delay = Math.trunc(Math.random() * 50)
+                setTimeout(async () => {
+                    for (let j = 0; j < tasks; j++) {
+                        await this.mutex.acquire()
+                        await new Promise((resolve, reject) => {
+                            let delay = Math.trunc(Math.random() * 50)
+                            console.log(`++ WORK pid=${this.pid} worker=${i} task=${j} duration=${delay}ms`)
+                            setTimeout(resolve, delay)
+                        })
+                        await this.mutex.release()
+                        await new Promise((resolve, reject) => {
+                            let delay = Math.trunc(Math.random() * 50)
+                            setTimeout(resolve, delay)
+                        })
+                    }
                     resolve()
                 }, delay)
-            })
-            // console.log(`++ RELEASE ${id} (#${i})`)
-            await mutex.release()
-            await new Promise((resolve) => {
-                let delay = Math.trunc(Math.random() * 1 * 500)
-                setTimeout(resolve, delay)
-            })
+            }))
         }
-
-        /*  close connection  */
-        await mutex.close()
-        console.log(`++ END ${id}`)
-    }, delay)
+        await Promise.all(promises)
+    }
+    async close () {
+        console.log(`++ CLOSE pid=${this.pid}`)
+        await this.mutex.close()
+    }
 }
 

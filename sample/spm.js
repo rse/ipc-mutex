@@ -1,8 +1,10 @@
 
-const suite = require("./suite")
+const Suite = require("./suite")
 
 ;(async () => {
-    for (let i = 0; i < 10; i++)
-        suite("spm:foo", i)
+    let suite = new Suite("spm:foo")
+    await suite.open()
+    await suite.work()
+    await suite.close()
 })()
 

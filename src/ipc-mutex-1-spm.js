@@ -24,11 +24,6 @@
 
 import { Lock } from "lock"
 
-/*  internal central mutex  */
-const lock   = Lock()
-const locked = {}
-const unlock = {}
-
 /*  Mutex for Single-Process-Model (SPM)  */
 export default class Mutex {
     constructor (url) {
@@ -36,6 +31,9 @@ export default class Mutex {
             throw new Error("no mutex id given")
         this.url    = url
         this.id     = this.url.hostname
+        this.lock   = Lock()
+        this.locked = false
+        this.unlock = null
         this.opened = false
     }
 
@@ -49,9 +47,9 @@ export default class Mutex {
     /*  acquire mutual exclusion lock  */
     async acquire () {
         return new Promise((resolve /*, reject */) => {
-            lock(`IPC-Mutex-spm:${this.id}`, (release) => {
-                locked[this.id] = true
-                unlock[this.id] = release
+            this.lock(`IPC-Mutex-spm:${this.id}`, (release) => {
+                this.locked = true
+                this.unlock = release
                 resolve()
             })
         })
@@ -59,15 +57,15 @@ export default class Mutex {
 
     /*  release mutual exclusion lock  */
     async release () {
-        if (!locked[this.id])
+        if (!this.locked)
             throw new Error("still not acquired")
         return new Promise((resolve, reject) => {
-            unlock[this.id]((err) => {
+            this.unlock((err) => {
                 if (err)
                     reject(err)
                 else {
-                    delete unlock[this.id]
-                    delete locked[this.id]
+                    this.unlock = null
+                    this.locked = false
                     resolve()
                 }
             })()
@@ -78,7 +76,7 @@ export default class Mutex {
     async close () {
         if (!this.opened)
             throw new Error("still not opened")
-        if (locked[this.id])
+        if (this.locked)
             await this.release()
         this.opened = false
     }

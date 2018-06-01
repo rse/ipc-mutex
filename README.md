@@ -49,7 +49,7 @@ Usage
 (async () => {
     const Mutex = require("ipc-mutex")
 
-    /*  open connection  */
+    /*  open connection (once per Node process only)  */
     let mutex = new Mutex("spm:foo")
     await mutex.open()
 
@@ -59,7 +59,7 @@ Usage
     /*  release exclusive lock  */
     await mutex.release()
 
-    /*  close connection  */
+    /*  close connection (once per Node process only)  */
     await mutex.close()
 })
 ```

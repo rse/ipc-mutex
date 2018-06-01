@@ -40,7 +40,6 @@ export default class Mutex {
         this.readwait   = this.url.query.readwait  ? this.url.query.readwait  : 30
         this.lockdelay  = this.url.query.lockdelay ? this.url.query.lockdelay : 2
         this.opened     = false
-        this.locked     = false
     }
 
     /*  open connection  */
@@ -87,8 +86,6 @@ export default class Mutex {
     async acquire () {
         if (!this.opened)
             throw new Error("still not opened")
-        if (this.locked)
-            throw new Error("already acquired")
         let waitIndex
         const lock = {
             claim: async () => {
@@ -99,10 +96,8 @@ export default class Mutex {
                 })
                 if (!acquired)
                     return lock.wait()
-                else {
-                    this.locked = true
+                else
                     return true
-                }
             },
             wait: async () => {
                 let result = await this.consul.kv.get({
@@ -126,23 +121,17 @@ export default class Mutex {
     async release () {
         if (!this.opened)
             throw new Error("still not opened")
-        if (!this.locked)
-            throw new Error("still not acquired")
-        let released = await this.consul.kv.set({
+        await this.consul.kv.set({
             key:     this.key,
             value:   "leader",
             release: this.session
         })
-        if (released)
-            this.locked = false
     }
 
     /*  close connection  */
     async close () {
         if (!this.opened)
             throw new Error("still not opened")
-        if (this.locked)
-            await this.release()
         if (this.timer !== null) {
             clearTimeout(this.timer)
             this.timer = null

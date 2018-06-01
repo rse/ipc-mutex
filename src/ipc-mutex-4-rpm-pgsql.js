@@ -33,7 +33,6 @@ export default class Mutex {
         this.url      = url
         this.db       = null
         this.opened   = false
-        this.locked   = false
 
         /*  derive database and id  */
         if (!this.url.pathname)
@@ -101,8 +100,6 @@ export default class Mutex {
         /*  sanity check usage  */
         if (!this.opened)
             throw new Error("still not opened")
-        if (this.locked)
-            throw new Error("already acquired")
 
         /*  acquire PostgreSQL advisory lock  */
         await new Promise((resolve, reject) => {
@@ -111,7 +108,6 @@ export default class Mutex {
                 else     resolve()
             })
         })
-        this.locked = true
     }
 
     /*  release mutual exclusion lock  */
@@ -119,8 +115,6 @@ export default class Mutex {
         /*  sanity check usage  */
         if (!this.opened)
             throw new Error("still not opened")
-        if (!this.locked)
-            throw new Error("still not acquired")
 
         /*  release PostgreSQL advisory lock  */
         await new Promise((resolve, reject) => {
@@ -129,7 +123,6 @@ export default class Mutex {
                 else     resolve()
             })
         })
-        this.locked = false
     }
 
     /*  close connection  */
@@ -137,8 +130,6 @@ export default class Mutex {
         /*  sanity check usage  */
         if (!this.opened)
             throw new Error("still not opened")
-        if (this.locked)
-            await this.release()
 
         /*  end PostgreSQL client connection  */
         await new Promise((resolve, reject) => {

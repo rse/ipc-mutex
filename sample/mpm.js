@@ -1,21 +1,33 @@
 
 /* eslint no-console: off */
 
-const suite   = require("./suite")
+const Suite   = require("./suite")
 const cluster = require("cluster")
 
 ;(async () => {
+    let workers = 2
     if (cluster.isMaster) {
-        for (let i = 0; i < 2; i++)
-            cluster.fork()
+        for (let i = 0; i < workers; i++)
+            setTimeout(() => cluster.fork(), 0)
         cluster.on("exit", (worker, code, signal) => {
-            console.log(`DIED ${worker.process.pid}`)
+            workers--
         })
     }
-    setTimeout(async () => {
-        await suite(`mpm:foo`, cluster.isMaster ? "MASTER" : `WORKER-${process.pid}`)
-        if (!cluster.isMaster)
-            process.exit(0)
-    }, cluster.isMaster ? 1000 : 1000)
+    let suite = new Suite("mpm:foo", cluster.isMaster ? "MASTER" : `WORKER-${process.pid}`)
+    await suite.open()
+    await suite.work()
+    if (cluster.isMaster) {
+        let timer = setInterval(async () => {
+            if (workers === 0) {
+                clearTimeout(timer)
+                await suite.close()
+                process.exit(0)
+            }
+        }, 100)
+    }
+    else {
+        await suite.close()
+        process.exit(0)
+    }
 })()
 

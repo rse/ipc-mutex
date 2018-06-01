@@ -73,7 +73,7 @@ export default class Mutex {
         if (!this.opened)
             throw new Error("still not opened")
         return new Promise((resolve, reject) => {
-            this.lock("IPC-Mutex-rpm", (unlock) => {
+            this.lock("IPC-Mutex-rpm", 10 * 1000, (unlock) => {
                 this.unlock = unlock
                 this.locked = true
                 resolve()
