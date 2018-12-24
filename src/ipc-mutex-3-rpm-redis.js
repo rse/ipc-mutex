@@ -45,8 +45,8 @@ export default class Mutex {
             let options = {}
             options.host = this.url.hostname
             options.port = this.url.port ? parseInt(this.url.port) : 6379
-            if (this.url.auth)
-                options.password = this.url.auth.split(":")[1]
+            if (this.url.password)
+                options.password = this.url.password
             if (this.url.pathname)
                 options.prefix = this.url.pathname.replace(/^\/([^/]+).*/, "$1/")
             this.client = redis.createClient(options)

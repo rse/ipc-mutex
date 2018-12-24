@@ -36,9 +36,9 @@ export default class Mutex {
         this.session    = null
         this.timer      = null
         this.key        = `IPC-Mutex-RPM/${this.id}/leader`
-        this.sessionttl = this.url.query.ttl       ? this.url.query.ttl       : 15
-        this.readwait   = this.url.query.readwait  ? this.url.query.readwait  : 30
-        this.lockdelay  = this.url.query.lockdelay ? this.url.query.lockdelay : 2
+        this.sessionttl = this.url.searchParams && this.url.searchParams.get("ttl")       ? this.url.searchParams.get("ttl")       : 15
+        this.readwait   = this.url.searchParams && this.url.searchParams.get("readwait")  ? this.url.searchParams.get("readwait")  : 30
+        this.lockdelay  = this.url.searchParams && this.url.searchParams.get("lockdelay") ? this.url.searchParams.get("lockdelay") : 2
         this.opened     = false
     }
 
@@ -52,21 +52,22 @@ export default class Mutex {
             promisify: true,
             defaults:  {}
         }
-        if (this.url.auth)
-            options.defaults.token = this.url.auth.split(":")[1]
-        if (   this.url.query.tls !== undefined
-            || this.url.query.ca  !== undefined
-            || this.url.query.key !== undefined
-            || this.url.query.crt !== undefined) {
+        if (this.url.password)
+            options.defaults.token = this.url.password
+        if (   this.url.searchParams !== undefined
+            && (   this.url.searchParams.get("tls")
+                || this.url.searchParams.get("ca")
+                || this.url.searchParams.get("key")
+                || this.url.searchParams.get("crt"))) {
             options.rejectUnauthorized = false
-            if (this.url.query.ca !== undefined) {
-                options.ca = fs.readFileSync(this.url.query.ca).toString()
+            if (this.url.searchParams.get("ca")) {
+                options.ca = fs.readFileSync(this.url.searchParams.get("ca")).toString()
                 options.rejectUnauthorized = true
             }
-            if (this.url.query.key !== undefined)
-                options.key = fs.readFileSync(this.url.query.key).toString()
-            if (this.url.query.crt !== undefined)
-                options.cert = fs.readFileSync(this.url.query.crt).toString()
+            if (this.url.searchParams.get("key"))
+                options.key = fs.readFileSync(this.url.searchParams.get("key")).toString()
+            if (this.url.searchParams.get("crt"))
+                options.cert = fs.readFileSync(this.url.searchParams.get("crt")).toString()
         }
         this.consul = consul(options)
         let result = await this.consul.session.create({

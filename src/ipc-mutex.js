@@ -34,7 +34,7 @@ import MutexRPMconsul  from "./ipc-mutex-5-rpm-consul"
 class Mutex {
     constructor (url) {
         let m
-        let urlParsed = URL.parse(url, true)
+        let urlParsed = new URL.URL(url)
         if (urlParsed.protocol === "spm:")
             this.strategy = new MutexSPM(urlParsed)
         else if (urlParsed.protocol === "mpm:")
