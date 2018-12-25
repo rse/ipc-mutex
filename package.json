@@ -19,7 +19,6 @@
     "dependencies": {
         "cluster-rpc":                               "1.0.7",
         "bluebird":                                  "3.5.3",
-        "urijs":                                     "1.19.1",
         "redis":                                     "2.8.0",
         "redis-lock":                                "0.1.4",
         "lock":                                      "1.1.0",
