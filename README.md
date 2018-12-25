@@ -53,7 +53,7 @@ Usage
     let mutex = new Mutex("spm:foo")
     await mutex.open()
 
-    /*  acquire exclusive lock  */
+    /*  acquire exclusive lock (and blocks until available)  */
     await mutex.acquire()
 
     /*  release exclusive lock  */
