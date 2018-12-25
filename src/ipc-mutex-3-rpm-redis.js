@@ -22,7 +22,8 @@
 **  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-import redis     from "redis"
+import fs        from "fs"
+import Redis     from "ioredis"
 import redisLock from "redis-lock"
 
 /*  Mutex for Remote-Process-Model (RPM) with Redis standalone database  */
@@ -48,8 +49,23 @@ export default class Mutex {
             if (this.url.password)
                 options.password = this.url.password
             if (this.url.pathname)
-                options.prefix = this.url.pathname.replace(/^\/([^/]+).*/, "$1/")
-            this.client = redis.createClient(options)
+                options.keyPrefix = this.url.pathname.replace(/^\/([^/]+).*/, "$1/")
+            if (   this.url.searchParams !== undefined
+                && (   this.url.searchParams.get("tls")
+                    || this.url.searchParams.get("ca")
+                    || this.url.searchParams.get("key")
+                    || this.url.searchParams.get("crt"))) {
+                options.tls = { rejectUnauthorized: false }
+                if (this.url.searchParams.get("ca")) {
+                    options.tls.ca = fs.readFileSync(this.url.searchParams.get("ca")).toString()
+                    options.tls.rejectUnauthorized = true
+                }
+                if (this.url.searchParams.get("key"))
+                    options.tls.key = fs.readFileSync(this.url.searchParams.get("key")).toString()
+                if (this.url.searchParams.get("crt"))
+                    options.tls.cert = fs.readFileSync(this.url.searchParams.get("crt")).toString()
+            }
+            this.client = new Redis(options)
             this.lock = redisLock(this.client)
             let handled = false
             this.client.on("connect", () => {
