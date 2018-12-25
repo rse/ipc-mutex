@@ -24,9 +24,9 @@
 
 declare class Mutex {
     constructor (url: string);
-    open(): Promise<void>;
+    open():    Promise<void>;
     acquire(): Promise<void>;
     release(): Promise<void>;
-    close(): Promise<void>;
+    close():   Promise<void>;
 }
 

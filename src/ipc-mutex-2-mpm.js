@@ -62,8 +62,10 @@ class InternalMutex {
 /*  Mutex for Multi-Process-Model (MPM)  */
 export default class Mutex {
     constructor (url) {
-        if (url.pathname === "")
+        if (!url.pathname)
             throw new Error("no mutex id given")
+        if (!url.pathname.match(/^[a-zA-Z][a-zA-Z0-9-]*$/))
+            throw new Error("invalid mutex id given")
         this.url    = url
         this.id     = this.url.pathname
         this.opened = false
