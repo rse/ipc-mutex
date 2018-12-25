@@ -54,6 +54,19 @@ export default class Mutex {
                 password: this.url.password
             }
         }
+        if (   this.url.searchParams !== undefined
+            && (   this.url.searchParams.get("tls")
+                || this.url.searchParams.get("ca")
+                || this.url.searchParams.get("key")
+                || this.url.searchParams.get("crt"))) {
+            options.credentials = {}
+            if (this.url.searchParams.get("crt"))
+                options.certChain = fs.readFileSync(this.url.searchParams.get("crt")).toString()
+            if (this.url.searchParams.get("key"))
+                options.credentials.privateKey = fs.readFileSync(this.url.searchParams.get("key")).toString()
+            if (this.url.searchParams.get("ca"))
+                options.credentials.certChain = fs.readFileSync(this.url.searchParams.get("ca")).toString()
+        }
         this.etcd = new EtcD(options)
         this.lock = this.etcd.lock(`IPC-Mutex-RPM-${this.id}-lock`)
         this.opened = true
