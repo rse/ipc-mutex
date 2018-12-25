@@ -72,16 +72,18 @@ The following URLs are supported on `new Mutex(url)`:
 - `rpm+pgsql://[<username>:<password>@]<host>[:<port>][/<database>]/<id>[?tls=true[&&key=<file>&&crt=<file>&&ca=<file>]]`
 - `rpm+consul://[xxx:<token>@]<host>[:<port>]/<id>[?tls=true[&&key=<file>&&crt=<file>&&ca=<file>]]`
 
+The `<id>` is an arbitrary unique identifier matching the regular expression `^[a-zA-Z][a-zA-Z0-9-]*$`.
+
 Application Programming Interface (API)
 ---------------------------------------
 
 ```ts
-declare class KeyVal {
+declare class Mutex {
     constructor (url: string);
-    open(): Promise<void>;
+    open():    Promise<void>;
     acquire(): Promise<void>;
     release(): Promise<void>;
-    close(): Promise<void>;
+    close():   Promise<void>;
 }
 ```
 
