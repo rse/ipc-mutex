@@ -5,7 +5,7 @@ const Suite   = require("./suite")
 const cluster = require("cluster")
 
 ;(async () => {
-    let workers = 2
+    let workers = 10
     if (cluster.isMaster) {
         for (let i = 0; i < workers; i++)
             setTimeout(() => cluster.fork(), 0)

@@ -14,7 +14,7 @@ module.exports = class Suite {
         this.mutex = new Mutex(this.url)
         await this.mutex.open()
     }
-    async work (workers = 10, tasks = 10) {
+    async work (workers = 1, tasks = 10) {
         let promises = []
         for (let i = 0; i < workers; i++) {
             promises.push(new Promise((resolve, reject) => {
