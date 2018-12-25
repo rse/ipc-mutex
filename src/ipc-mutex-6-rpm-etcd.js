@@ -22,6 +22,7 @@
 **  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
+import fs                from "fs"
 import { Etcd3 as EtcD } from "etcd3"
 
 /*  Mutex for Remote-Process-Model (RPM) with EtcD cluster manager  */
