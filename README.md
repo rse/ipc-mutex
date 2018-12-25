@@ -15,21 +15,22 @@ About
 
 This [Node.js](https://nodejs.org) module provides an abstraction layer
 for Inter-Process-Communication (IPC) through a Mutual Exclusion Lock (Mutex).
-It supports the following modes:
+It supports the following modes
+(in order of increasing process scope and overall complexity):
 
-- Single-Process-Model (SPM):<br/>
+- **Single-Process-Model (SPM):**<br/>
   This is for Node applications NOT using the `cluster` module. The
   coordination is performed with an in-memory data structure. No
   external resource is needed.
 
-- Multi-Process-Model (MPM):<br/>
+- **Multi-Process-Model (MPM):**<br/>
   This is for Node applications using the `cluster` module. The
   coordination is performed with an in-memory data structure in the
   master process and an IPC message exchange between the worker
   processes and the master process with the help of the `cluster`
   module. No external resource is needed.
 
-- Remote-Process-Model (RPM):<br/>
+- **Remote-Process-Model (RPM):**<br/>
   This is for Node applications split into distinct processes (not
   created through the `cluster` module), usually running also on
   distinct machines. The coordination is performed with the help of an
