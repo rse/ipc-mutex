@@ -29,6 +29,7 @@ import MutexMPM        from "./ipc-mutex-2-mpm"
 import MutexRPMredis   from "./ipc-mutex-3-rpm-redis"
 import MutexRPMpgsql   from "./ipc-mutex-4-rpm-pgsql"
 import MutexRPMconsul  from "./ipc-mutex-5-rpm-consul"
+import MutexRPMetcd    from "./ipc-mutex-6-rpm-etcd"
 
 /*  Mutex API  */
 class Mutex {
@@ -43,6 +44,7 @@ class Mutex {
             if      (m[1] === "redis")  this.strategy = new MutexRPMredis(urlParsed)
             else if (m[1] === "pgsql")  this.strategy = new MutexRPMpgsql(urlParsed)
             else if (m[1] === "consul") this.strategy = new MutexRPMconsul(urlParsed)
+            else if (m[1] === "etcd")   this.strategy = new MutexRPMetcd(urlParsed)
             else
                 throw new Error(`unknown implementation strategy "${url}"`)
         }

@@ -33,7 +33,8 @@ It supports the following modes:
   This is for Node applications split into distinct processes (not
   created through the `cluster` module), usually running also on
   distinct machines. The coordination is performed with the help of an
-  external lock manager. Currently Redis, PostgreSQL and Consul are supported.
+  external lock manager. Currently Redis, PostgreSQL, Consul and EtcD
+  are supported.
 
 Installation
 ------------
@@ -71,6 +72,7 @@ The following URLs are supported on `new Mutex(url)`:
 - `rpm+redis://[xxx:<secret>@]<host>[:<port>]/<id>`
 - `rpm+pgsql://[<username>:<password>@]<host>[:<port>][/<database>]/<id>[?tls=true[&&key=<file>&&crt=<file>&&ca=<file>]]`
 - `rpm+consul://[xxx:<token>@]<host>[:<port>]/<id>[?tls=true[&&key=<file>&&crt=<file>&&ca=<file>]]`
+- `rpm+etcd://[<username>:<password>@]<host>[:<port>]/<id>[?tls=true[&&key=<file>&&crt=<file>&&ca=<file>]]`
 
 The `<id>` is an arbitrary unique identifier matching the regular expression `^[a-zA-Z][a-zA-Z0-9-]*$`.
 
