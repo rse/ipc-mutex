@@ -38,7 +38,7 @@ export default class Mutex {
         this.key        = `IPC-Mutex-RPM/${this.id}/leader`
         this.sessionttl = this.url.searchParams && this.url.searchParams.get("ttl")       ? this.url.searchParams.get("ttl")       : 15
         this.readwait   = this.url.searchParams && this.url.searchParams.get("readwait")  ? this.url.searchParams.get("readwait")  : 30
-        this.lockdelay  = this.url.searchParams && this.url.searchParams.get("lockdelay") ? this.url.searchParams.get("lockdelay") : 2
+        this.lockdelay  = this.url.searchParams && this.url.searchParams.get("lockdelay") ? this.url.searchParams.get("lockdelay") : 0.5
         this.opened     = false
     }
 
